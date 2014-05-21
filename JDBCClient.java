@@ -21,36 +21,21 @@ public class JDBCClient {
 		Properties props = new Properties();
 		File f = new File(propsFile);
 		if (f.exists()) {
+		    System.out.println("Using the property file "+f.getName());
 		    props.load(new FileInputStream(f));
 		}
 		else {
-		    props.getProperty("url", "jdbc:sharenet://139.116.158.50:21003");
-		    props.setProperty("dbms", "SPDS");
-		    props.setProperty("shareRelease", "v9");
-		    props.setProperty("spduser", "etl3spd");
-		    props.setProperty("sharePassword", "etlspd3_");
-    		String options = "DBQ='VL_SPDS' HOST='139.116.158.50' SERV='5180'";
-    		props.setProperty("dbms_options", options);
+		    System.out.println("Property file not found "+f.getName());
 		}
+		System.out.println("Properties:"+props);
+		System.out.println("Trying to Connect...");
 		return DriverManager.getConnection(props.getProperty("url"), props);
-	}
-
-	public static void showSchema(Connection connection) throws Exception {
-		try {
-			DatabaseMetaData metadata = connection.getMetaData();
-			ResultSet rs = metadata.getSchemas();
-			while (rs.next()){
-				System.out.println("Schema:"+rs.getString("TABLE_SCHEM"));
-			}
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
 	}
 
 	public static void execute(Connection connection, String sql) throws Exception {
 		try {
+		    System.out.println("Connection Sucessful...");
+		    System.out.println("Starting to Execute SQL = "+sql);
 			Statement statement = connection.createStatement();
 
 			ResultSet results = statement.executeQuery(sql);
